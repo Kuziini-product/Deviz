@@ -1,22 +1,21 @@
-import os
+mport os
 from openai import OpenAI
 from dotenv import load_dotenv
 
-# Încarcă variabilele din .env
+# Încarcă variabilele din fișierul .env
 load_dotenv()
 
-# Obține cheia API din variabila de mediu
-import os
-print("DEBUG - API KEY:", os.getenv("OPENAI_API_KEY"))
+# Definim API_KEY imediat după ce încărcăm .env
+API_KEY = os.getenv("OPENAI_API_KEY")
 
-# Verifică dacă este setată cheia
+# Verificăm dacă este setată
 if not API_KEY:
     raise ValueError("🔑 OPENAI_API_KEY nu este setată. Verifică fișierul .env sau Streamlit Secrets.")
 
-# Creează clientul GPT
+# Inițializăm clientul GPT
 client = OpenAI(api_key=API_KEY)
 
-# Exemplu funcție de generare deviz
+# Funcția AI de generare deviz
 def genereaza_deviz_AI(prompt_user: str):
     try:
         response = client.chat.completions.create(
