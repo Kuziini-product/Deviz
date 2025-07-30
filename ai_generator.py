@@ -6,7 +6,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Obține cheia API din variabila de mediu
-API_KEY = os.getenv("OPENAI_API_KEY")
+import os
+print("DEBUG - API KEY:", os.getenv("OPENAI_API_KEY"))
 
 # Verifică dacă este setată cheia
 if not API_KEY:
