@@ -1,0 +1,9 @@
+﻿Nume ,Cod,Pret,UM,Furnizor,Producator,Cod _Furnizor,Grosime,Latime,Lungime
+Pal _alb,w980,400,buc,Decorum,Ggger,A1,,18,2070
+Pal _Stejar,h3371,600,buc,Decorum,Egger,H2,18,2070,2750
+Balama_ap,Bal,12,Buc,Sachermaer,Blum,Bal1,,,
+Placuta_balama,3d,2,buc,Sachermaer,blum,bl1,,,
+Picior_h27,h27,2,buc,sachermaerblum,,bf,,,
+Maber,96,3,buc,mam,mam,mame,,,
+Minifix,min1,1,buc,hafele,hafele,hafmin,,,
+Pfl_alb,pfl,75,buc,egger,decorum,pfh3,3,2070,2700

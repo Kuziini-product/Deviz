@@ -1,0 +1,11 @@
+streamlit
+openai>=1.0.0
+pandas
+fpdf
+pytesseract
+pillow
+python-dotenv
+speechrecognition
+numpy
+openpyxl
+
