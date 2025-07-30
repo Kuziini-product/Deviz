@@ -1,51 +1,32 @@
-
-from openai import OpenAI
-import pandas as pd
 import os
+from openai import OpenAI
 from dotenv import load_dotenv
 
+# Încarcă variabilele din .env
 load_dotenv()
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-def genereaza_deviz_AI(descriere, dimensiuni, baza_date_df):
-    tabel_text = baza_date_df.head(30).to_csv(index=False)
+# Obține cheia API din variabila de mediu
+API_KEY = os.getenv("OPENAI_API_KEY")
 
-    prompt = f"""
-Avem următoarea bază de date cu materiale și prețuri:
+# Verifică dacă este setată cheia
+if not API_KEY:
+    raise ValueError("🔑 OPENAI_API_KEY nu este setată. Verifică fișierul .env sau Streamlit Secrets.")
 
-{tabel_text}
+# Creează clientul GPT
+client = OpenAI(api_key=API_KEY)
 
-Accesorii obligatorii:
-  - Minim 4 balamale Blum (2 uși) sau mai multe, în funcție de înălțime (1 balama/350 mm per ușă)
-  - Minifixuri HFL pentru asamblare
-  - 4 picioare reglabile HFL
-  - 2 mânere standard
-  - Suporturi raft HFL (4 per raft)
-  - Șuruburi și dibluri incluse
-
-Generează un deviz tabelar Markdown cu: Nume | Cantitate | UM | Preț unitar | Total
-
-Descriere:
-Dimensiuni: {dimensiuni}
-{descriere}
-"""
-
+# Exemplu funcție de generare deviz
+def genereaza_deviz_AI(prompt_user: str):
     try:
-        chat_response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.4
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "Ești un expert în mobilier care generează devize detaliate."},
+                {"role": "user", "content": prompt_user}
+            ],
+            temperature=0.5,
+            max_tokens=1500
         )
-        raspuns = chat_response.choices[0].message.content
+        return response.choices[0].message.content.strip()
     except Exception as e:
-        return f"⚠️ Eroare OpenAI: {e}", pd.DataFrame()
-
-    linii = [linie for linie in raspuns.split("\n") if "|" in linie]
-    curat = [[col.strip() for col in linie.split("|")] for linie in linii]
-    df_deviz = pd.DataFrame(curat[1:], columns=curat[0]) if len(curat) > 1 else pd.DataFrame()
-
-    # Forțăm conversie Total în numeric
-    if not df_deviz.empty and "Total" in df_deviz.columns:
-        df_deviz["Total"] = pd.to_numeric(df_deviz["Total"], errors="coerce").fillna(0)
-
-    return raspuns, df_deviz
+        return f"Eroare la generarea devizului: {e}"
